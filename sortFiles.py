@@ -1,6 +1,4 @@
 import sys
-import os
-import shutil
 import platform
 from pathlib import Path
 
@@ -78,7 +76,6 @@ def main():
 		filetypes.setdefault('presentations' , []).append('ppt')
 		filetypes.setdefault('presentations' , []).append('pptx')
 		file_list = [x for x in source.iterdir() if x.is_file()]
-		#print(file_list)
 		for filetype in filetypes:
 			for files in (file_list):
 				if(sortfiles(files,filetypes[filetype])):
