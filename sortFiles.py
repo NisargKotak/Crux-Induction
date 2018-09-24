@@ -3,10 +3,9 @@ import platform
 from pathlib import Path
 
 
-#sorts files according to their extension;
+#checks whether the extension of the file is in the list of extensions of the filetype;
 #arguments passed: file_name - name of the file to be sorted;
 #                  filetype - type of file;
-#global variables used: none;
 
 def sortfiles(file_name , filetype):
 	file_extension = str(file_name).split(".")[-1]
@@ -15,77 +14,47 @@ def sortfiles(file_name , filetype):
 	else:
 		return False
 	 	
-
-#local variables used: slash - forward or backward slash depending upon the os; class string
-#                      source - path of the source folder; class string
-#                      destination - path of the folder where you want the files sorted; class string
-#                      filetypes - different categories in which the files can be sorted; class dict
-#                      filetype - a particular category of filetypes; class dict_keys
-#                      files - name of file to be sorted; class string
-#global variables used: none;	 	
+	 	
 def main():
+	#assigns the value of forward or backward slach according to the os
 	if(platform.system() == 'Windows'):
 		slash = "\\"
 	else:
-		slash = "/"
+		slash = "/"	
+	#checks whether source and destination paths are passed
 	if(len(sys.argv) < 3):
 		print("Usage:sortFiles <SrcPath> <DestPath>;\nPlease give valid SrcPath and DestPath directories")
 		sys.exit(-1)
 	source = Path(sys.argv[1])
+	#checks whether the source path exists or not
 	if(not source.exists()):
 		print("The source directory <$" + source + "> doesn't exist")
 		sys.exit(-1)
 	else:
-		filetypes = {}
-		filetypes.setdefault('c_programs' , []).append('c')
-		filetypes.setdefault('java_programs' , []).append('java')
-		filetypes.setdefault('java_programs' , []).append('class')
-		filetypes.setdefault('python_programs' , []).append('py')
-		filetypes.setdefault('images' , []).append('jpg')
-		filetypes.setdefault('images' , []).append('JPG')
-		filetypes.setdefault('images' , []).append('gif')
-		filetypes.setdefault('images' , []).append('png')
-		filetypes.setdefault('images' , []).append('jpeg')
-		filetypes.setdefault('images' , []).append('bmp')
-		filetypes.setdefault('audio' , []).append('mp3')
-		filetypes.setdefault('audio' , []).append('wav')
-		filetypes.setdefault('audio' , []).append('aiff')
-		filetypes.setdefault('audio' , []).append('flac')
-		filetypes.setdefault('audio' , []).append('aac')
-		filetypes.setdefault('videos' , []).append('mp4')
-		filetypes.setdefault('videos' , []).append('m4v')
-		filetypes.setdefault('videos' , []).append('flv')
-		filetypes.setdefault('videos' , []).append('mpeg')
-		filetypes.setdefault('videos' , []).append('mov')
-		filetypes.setdefault('videos' , []).append('mpg')
-		filetypes.setdefault('videos' , []).append('mpe')
-		filetypes.setdefault('videos' , []).append('wmv')
-		filetypes.setdefault('videos' , []).append('MOV')
-		filetypes.setdefault('videos' , []).append('mkv')
-		filetypes.setdefault('compressed' , []).append('zip')
-		filetypes.setdefault('compressed' , []).append('tar')
-		filetypes.setdefault('compressed' , []).append('rar')
-		filetypes.setdefault('compressed' , []).append('7')
-		filetypes.setdefault('compressed' , []).append('deb')
-		filetypes.setdefault('compressed' , []).append('gz')
-		filetypes.setdefault('exe' , []).append('exe')		    
-		filetypes.setdefault('documents' , []).append('doc')
-		filetypes.setdefault('documents' , []).append('docx')
-		filetypes.setdefault('documents' , []).append('txt')
-		filetypes.setdefault('documents' , []).append('pdf')
-		filetypes.setdefault('presentations' , []).append('ppt')
-		filetypes.setdefault('presentations' , []).append('pptx')
+		#dictionary containing various filetypes and extensions associated with them
+		filetypes = dict(
+		c_programs = ['c'],
+		java_programs = ['class','java'],
+		images = ['jpg','JPG','gif','png','jpeg','bmp'],
+		audio = ['mp3','wav','aiff','flac','aac'],
+		videos = ['mp4','flv','m4v','mpeg','mov','mkv','mpg','mpe','wmv','MOV'],
+		compressed = ['zip','tar','rar','deb','gz'],
+		exe = ['exe'],
+		documents = ['pdf','doc','docx','txt'],
+		presentations = ['ppt','pptx']
+		)
+		#list of all the files present in the source folder
 		file_list = [x for x in source.iterdir() if x.is_file()]
+		#sorts files according to their extensions
 		for filetype in filetypes:
 			for files in (file_list):
 				if(sortfiles(files,filetypes[filetype])):
-					source_file = Path(str(files))
-					destination = Path(sys.argv[2] + slash + filetype)
-					if(not destination.exists()):
+					source_file = Path(str(files))	#source path of particular file
+					destination = Path(sys.argv[2] + slash + filetype)	#destination path where the file is to moved
+					if(not destination.exists()):	#creating destionation path if it doesn't exist
 						Path.mkdir(destination)	
-					source_file.rename(destination / source_file.name)
-				
-						
+					source_file.rename(destination / source_file.name)	#moving file			
 
-main()
+if(__name__ == "__main__"):
+	main()
 
